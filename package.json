@@ -11,8 +11,8 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "element-ui": "^1.0.0-rc.5",
-    "vue": "^2.0.0-rc.8",
+    "element-ui": "^1.0.0-rc.7",
+    "vue": "^2.0.3",
     "vue-loader": "^9.5.1",
     "vue-resource": "^1.0.3",
     "vue-router": "^0.7.13",
