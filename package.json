@@ -2,7 +2,7 @@
   "name": "element-admin",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "liudeping <3421605748@qq.com>",
+  "author": "teulu",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
