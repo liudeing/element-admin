@@ -4,7 +4,3 @@ dist/
 npm-debug.log
 test/e2e/reports
 selenium-debug.log
-build/check-versions.js
-lib/
-spec/
-test/
