@@ -1,195 +1,184 @@
 <template>
-  <div class="ui tiny teal progress" v-show="isShow">
-    <div class="bar" style="transition-duration: 300ms;min-width:0;height:3px;" :style="{width: width + '%'}"></div>
-  </div>
-  <div class="home-header">
-    <a href="https://github.com/rootsli/vueadmin" target="_blank">
-      <img src="../assets/img/logo2.png" class="logo" alt="logo" />
-    </a>
-    <div class="ui inline pointing dropdown">
-      <div class="text">
-        <img class="ui avatar image" src="../assets/img/avatar_small.jpg"> 张小泉
-        <i class="dropdown icon"></i>
-      </div>
-      <div class="menu ui transition">
-        <a class="item" href="http://www.yeelink.net"><i class="reply mail icon"></i>返回首页</a>
-        <a class="item" href="javascript:;" @click="logout"><i class="sign out icon"></i>注销登录</a>
-      </div>
-    </div>
-  </div>
-  <div class="home-main">
-    <!-- menu -->
-    <div class="main-menu">
-      <menu></menu>
-    </div>
-    <div class="main-content">
-      <div class="menu-toggle" @click="toggleMenu">{{toggleTitle}}</div>
-      <!-- page container -->
-      <router-view></router-view>
-    </div>
-  </div>
+  <el-row class="panel">
+    <el-col :span="24" class="panel-top">
+      <el-col :span="20" style="font-size:26px;">
+        <img src="../assets/logo4.png" class="logo"> <span>AD<i style="color:#20a0ff">MIN</i></span>
+      </el-col>
+      <el-col :span="4">
+        <el-tooltip class="item tip-logout" effect="dark" content="退出" placement="bottom" style="padding:0px;">
+          <!--<i class="logout" v-on:click="logout"></i>-->
+          <i class="fa fa-sign-out" aria-hidden="true" v-on:click="logout"></i>
+        </el-tooltip>
+      </el-col>
+    </el-col>
+    <el-col :span="24" class="panel-center">
+      <!--<el-col :span="4">-->
+      <aside style="width:230px;">
+        <h5 class="admin"><i class="fa fa-user" aria-hidden="true" style="margin-right:5px;"></i>欢迎系统管理员：测试</h5>
+        <!--<el-menu style="border-top: 1px solid #475669;" default-active="/table" class="el-menu-vertical-demo" @open="handleopen"
+                    @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
+                    <el-submenu index="1">
+                        <template slot="title"><i class="el-icon-message"></i>导航一</template>
+                        <el-menu-item index="/table">Table</el-menu-item>
+                        <el-menu-item index="/form">Form</el-menu-item>
+                        <el-menu-item index="/page3">页面3</el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="2">
+                        <template slot="title"><i class="fa fa-id-card-o"></i>导航二</template>
+                        <el-menu-item index="/page4">选项4</el-menu-item>
+                        <el-menu-item index="/page5">选项5</el-menu-item>
+                    </el-submenu>
+                    <el-menu-item index="/page6"><i class="fa fa-line-chart"></i>导航三</el-menu-item>
+                </el-menu>-->
+        <el-menu style="border-top: 1px solid #475669;" default-active="/table" class="el-menu-vertical-demo" @open="handleopen"
+                 @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
+          <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
+            <el-submenu :index="index+''" v-if="!item.leaf">
+              <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
+              <el-menu-item v-for="child in item.children" :index="child.path">{{child.name}}</el-menu-item>
+            </el-submenu>
+            <el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
+          </template>
+        </el-menu>
+      </aside>
+      <!--</el-col>-->
+      <!--<el-col :span="20" class="panel-c-c">-->
+      <section class="panel-c-c">
+        <div class="grid-content bg-purple-light">
+          <el-col :span="24" style="margin-bottom:15px;">
+            <strong style="width:200px;float:left;color: #475669;">{{currentPathName}}</strong>
+            <el-breadcrumb separator="/" style="float:right;">
+              <el-breadcrumb-item :to="{ path: '/table' }">首页</el-breadcrumb-item>
+              <el-breadcrumb-item v-if="currentPathNameParent!=''">{{currentPathNameParent}}</el-breadcrumb-item>
+              <el-breadcrumb-item v-if="currentPathName!=''">{{currentPathName}}</el-breadcrumb-item>
+            </el-breadcrumb>
+          </el-col>
+          <el-col :span="24" style="background-color:#fff;box-sizing: border-box;">
+            <transition name="fade">
+              <router-view></router-view>
+            </transition>
+          </el-col>
+        </div>
+      </section>
+      <!--</el-col>-->
+    </el-col>
+  </el-row>
 </template>
+
 <script>
-  import Menu from './menu/Menu'
-  import { setProgress } from '../vuex/actions'
-  import $ from 'jquery'
-  export default{
+  export default {
     data() {
       return {
-        width: 0,
-        isShow: false,
-        toggleTitle: '隐藏菜单'
-      }
-    },
-    vuex: {
-      getters: {
-        progress: ({ progress }) => progress.rate || 0
-      },
-      actions: {
-        setProgress
+        currentPathName: 'Table',
+        currentPathNameParent: '导航一',
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        }
       }
     },
     watch: {
-      'progress': {
-        deep: true,
-        handler: function(val) {
-          if (val === 1) { // 有路由切换
-            this.isShow = true
-            this.width = 10
-            setTimeout(() => {
-              this.width = 60
-              setTimeout(() => {
-                this.width = 100
-                setTimeout(() => {
-                  this.isShow = false
-                  this.width = 0
-                  this.setProgress(0)
-                }, 300)
-              }, 200)
-            }, 100)
-          }
-        }
+      '$route'(to, from) { // 监听路由改变
+        this.currentPathName = to.name
+        this.currentPathNameParent = to.matched[0].name
       }
-    },
-    components: {
-      Menu
     },
     methods: {
-      toggleMenu() {
-        $('.main-menu').toggle(300)
-        if (this.toggleTitle === '隐藏菜单') {
-          $('.main-content').animate({
-            left: '0px'
-          }, 200)
-          this.toggleTitle = '显示菜单'
-        } else {
-          $('.main-content').animate({
-            left: '200px'
-          }, 200)
-          this.toggleTitle = '隐藏菜单'
-        }
+      onSubmit() {
+        console.log('submit!')
       },
-      logout() {
-        this.$route.router.go('/')
+      handleopen() {},
+      handleclose() {},
+      handleselect: function(a, b) {},
+      logout: function() { // 退出登录
+        var _this = this
+        this.$confirm('确认退出吗?', '提示', {
+        // type: 'warning'
+        }).then(() => {
+          _this.$router.replace('/login')
+        }).catch(() => {
+        })
       }
-    },
-    ready() {
-      $('.home-header .ui.dropdown').dropdown({ on: 'hover' })
     }
   }
 </script>
+
 <style scoped>
-    .ui.inline.dropdown {
-        float: right;
-        margin-right: 35px;
-    }
-    .ui.inline.dropdown:hover {
-        background-color: #53575E;
-    }
-    .ui.pointing.dropdown > .menu {
-        margin-top: 0 !important;
-    }
-    .main-menu .breadcrumb-item {
-        height: 39px;
-        line-height: 39px;
-        background-color: #FFFFFF;
-        padding-left: 12px;
-    }
-    .home-header {
-        overflow: visible;
-        right: 0;
-        z-index: 500;
-        min-width: 900px;
-        height: 44px;
-        line-height: 44px;
-        color: #fff;
-        background-color: #2a2d34;
-    }
-    .home-main {
-        position: absolute;
-        top: 44px;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        min-width: 900px;
-        font-size: 14px;
-    }
-    .home-main .main-menu {
-        width: 200px;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 2;
-        margin-bottom: 0;
-        border-right: 3px solid #0cadb7;
-        background-color: #293541;
-        float: left;
-        height: 100%;
-        color: #bbb;
-        overflow: hidden;
-    }
-    .home-main .main-content {
-        float: left;
-        height: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 200px;
-    }
-    .ui.progress {
-        position: absolute !important;
-        width: 100%;
-    }
-    .menu-toggle {
-        float: left;
-        background-color: #0cadb7;
-        width: 20px;
-        margin-top: 410px;
-        font-size: 14px;
-        color: #fff;
-        padding: 2px;
-        cursor: pointer;
-        border-top-right-radius: 6px;
-        border-bottom-right-radius: 6px;
-    }
-    .menu-toggle:hover {
-        background-color: rgba(12, 173, 183, 0.76);
-    }
-    .logo{
-        vertical-align: middle;
-    }
-</style>
-<style>
-    .page-container {
-        height: 100%;
-        width: 100%;
-        padding: 22px;
-    }
-    .ui.table a.operator:not(:first-child){
-        margin-left: 12px !important;
-    }
+	.fade-enter-active,
+	.fade-leave-active {
+		transition: opacity .5s
+	}
+
+	.fade-enter,
+	.fade-leave-active {
+		opacity: 0
+	}
+
+	.panel {
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		width: 100%;
+	}
+
+	.panel-top {
+		height: 60px;
+		line-height: 60px;
+		background: #1F2D3D;
+		color: #c0ccda;
+	}
+
+	.panel-center {
+		background: #324057;
+		position: absolute;
+		top: 60px;
+		bottom: 0px;
+		overflow: hidden;
+	}
+
+	.panel-c-c {
+		background: #f1f2f7;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+		bottom: 0px;
+		left: 230px;
+		overflow-y: scroll;
+		padding: 20px;
+	}
+
+	.logout {
+		background: url(../assets/logout_36.png);
+		background-size: contain;
+		width: 20px;
+		height: 20px;
+		float: left;
+	}
+
+	.logo {
+		width: 40px;
+		float: left;
+		margin: 10px 10px 10px 18px;
+	}
+
+	.tip-logout {
+		float: right;
+		margin-right: 20px;
+		padding-top: 5px;
+	}
+
+	.tip-logout i {
+		cursor: pointer;
+	}
+
+	.admin {
+		color: #c0ccda;
+		text-align: center;
+	}
 </style>

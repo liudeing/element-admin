@@ -1,54 +1,59 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import { sync } from 'vuex-router-sync'
-import store from './vuex/store'
 import App from './App'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
+import VueRouter from 'vue-router'
+import store from './vuex/store'
+import Vuex from 'vuex'
+import NProgress from 'nprogress'  // 页面顶部进度条
+import 'nprogress/nprogress.css'
 
-import routes from './router/routes'
-import alias from './router/alias'
-import { SET_MENU, SET_PROGRESS } from './vuex/types'
+import Login from './components/Login.vue'
+import Home from './components/Home.vue'
+import Table from './components//nav1/Table.vue'
 
-// Router
+Vue.use(ElementUI)
 Vue.use(VueRouter)
+Vue.use(Vuex)
+
+const routes = [
+  {
+    path: '/login',
+    component: Login,
+    hidden: true // 不显示在导航中
+  },
+  {
+    path: '/',
+    component: Home,
+    name: '导航一',
+    iconCls: 'el-icon-message', // 图标样式class
+    children: [
+      { path: '/table', component: Table, name: 'Table' }
+    ]
+  }
+]
 
 const router = new VueRouter({
-  history: false,
-  linkActiveClass: 'active',
-  saveScrollPosition: true
+  routes
 })
-router.map(routes)
-router.alias(alias)
-router.beforeEach(transition => {
-  if (transition.to.auth && !store.state.auth.token) {
-    // transition.abort()
-    transition.redirect('/login')
-  } else {
-    transition.next()
-  }
 
-  // 触发进度条
-  if (transition.to.name !== 'login') {
-    store.dispatch(SET_PROGRESS, { rate: 1 })
-  }
+router.beforeEach((to, from, next) => {
+  NProgress.start()
+  next()
 })
+
 router.afterEach(transition => {
-  store.dispatch(SET_MENU, { current: transition.to.parent })
-  window.scrollTo(0, 0)
+  NProgress.done()
 })
 
-// Filters
-// Vue.filter('date', filters.dateFilter);
-
-// router <-> vuex
-sync(store, router)
-
-router.start(App, 'app')
-
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   template: '<App/>',
+  router,
+  store,
   components: { App }
-})
+  // render: h => h(Login)
+}).$mount('#app')
+
+router.replace('/login')
+
