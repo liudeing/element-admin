@@ -1,17 +1,17 @@
 /**
  * Created by ldp on 2016/12/15.
  */
-import Vue from 'vue';
-import Vuex from 'vuex';
-import middlewares from './middlewares';
-import auth from './modules/auth';
-import menu from './modules/menu';
-import progress from './modules/progress';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import middlewares from './middlewares'
+import auth from './modules/auth'
+import menu from './modules/menu'
+import progress from './modules/progress'
 
-const debug = process.env.NODE_ENV !== 'production';
-Vue.use(Vuex);
-Vue.config.debug = debug;
-Vue.config.warnExpressionErrors = false;
+const debug = process.env.NODE_ENV !== 'production'
+Vue.use(Vuex)
+Vue.config.debug = debug
+Vue.config.warnExpressionErrors = false
 
 export default new Vuex.Store({
   modules: {
@@ -21,4 +21,4 @@ export default new Vuex.Store({
   },
   strict: debug,
   middlewares
-});
+})

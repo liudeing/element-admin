@@ -4,7 +4,7 @@ module.exports = {
   parserOptions: {
     sourceType: 'module'
   },
-  extends: 'elemefe',
+  "extends": "vue",
   // required to lint *.vue files
   plugins: [
     'html'
@@ -20,6 +20,7 @@ module.exports = {
   // add your custom rules here
   'rules': {
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'space-before-function-paren': [2, 'never'],
   }
 }

@@ -30,20 +30,20 @@
   </div>
 </template>
 <script>
-  import Menu from './menu/Menu';
-  import {setProgress} from '../vuex/actions';
-  import $ from 'jquery';
+  import Menu from './menu/Menu'
+  import { setProgress } from '../vuex/actions'
+  import $ from 'jquery'
   export default{
     data() {
       return {
         width: 0,
         isShow: false,
         toggleTitle: '隐藏菜单'
-      };
+      }
     },
     vuex: {
       getters: {
-        progress: ({progress}) => progress.rate || 0
+        progress: ({ progress }) => progress.rate || 0
       },
       actions: {
         setProgress
@@ -54,19 +54,19 @@
         deep: true,
         handler: function(val) {
           if (val === 1) { // 有路由切换
-            this.isShow = true;
-            this.width = 10;
-            setTimeout(()=> {
-              this.width = 60;
-              setTimeout(()=> {
-                this.width = 100;
-                setTimeout(()=> {
-                  this.isShow = false;
-                  this.width = 0;
-                  this.setProgress(0);
-                }, 300);
-              }, 200);
-            }, 100);
+            this.isShow = true
+            this.width = 10
+            setTimeout(() => {
+              this.width = 60
+              setTimeout(() => {
+                this.width = 100
+                setTimeout(() => {
+                  this.isShow = false
+                  this.width = 0
+                  this.setProgress(0)
+                }, 300)
+              }, 200)
+            }, 100)
           }
         }
       }
@@ -76,27 +76,27 @@
     },
     methods: {
       toggleMenu() {
-        $('.main-menu').toggle(300);
+        $('.main-menu').toggle(300)
         if (this.toggleTitle === '隐藏菜单') {
           $('.main-content').animate({
             left: '0px'
-          }, 200);
-          this.toggleTitle = '显示菜单';
+          }, 200)
+          this.toggleTitle = '显示菜单'
         } else {
           $('.main-content').animate({
             left: '200px'
-          }, 200);
-          this.toggleTitle = '隐藏菜单';
+          }, 200)
+          this.toggleTitle = '隐藏菜单'
         }
       },
       logout() {
-        this.$route.router.go('/');
+        this.$route.router.go('/')
       }
     },
     ready() {
-      $('.home-header .ui.dropdown').dropdown({on: 'hover'});
+      $('.home-header .ui.dropdown').dropdown({ on: 'hover' })
     }
-  };
+  }
 </script>
 <style scoped>
     .ui.inline.dropdown {

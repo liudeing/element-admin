@@ -1,13 +1,13 @@
 /**
  * Created by ldp on 2016/12/15.
  */
-import Login from '../components/Login';
-import Home from '../components/Home';
-import List from '../components/List';
-import Form from '../components/Form';
-import Page1 from '../components/Page1';
-import Page2 from '../components/Page2';
-import BaseChart from '../components/charts/BaseChart';
+import Login from '../components/Login'
+import Home from '../components/Home'
+import List from '../components/List'
+import Form from '../components/Form'
+import Page1 from '../components/Page1'
+import Page2 from '../components/Page2'
+import BaseChart from '../components/charts/BaseChart'
 
 export default {
   '/': {
@@ -57,4 +57,4 @@ export default {
       }
     }
   }
-};
+}

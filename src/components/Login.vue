@@ -29,7 +29,7 @@
   </div>
 </template>
 <script>
-  import {login} from '../vuex/actions';
+  import { login } from '../vuex/actions'
   export default{
     data() {
       return {
@@ -39,12 +39,12 @@
         },
         namePlaceholder: '请输入登录名'
 //                pwdPlaceholder: '请输入密码'
-      };
+      }
     },
     methods: {
       loginMain() {
 //        this.$route.router.go('/page1')
-        this.login(this.user);
+        this.login(this.user)
 //        auth.login({name: this.account, password: this.password}).then(res => {
 //          alert('ok');
 //        }, err => {
@@ -55,13 +55,13 @@
     },
     vuex: {
       getters: {
-        pwdPlaceholder: ({auth}) => auth.errmsg
+        pwdPlaceholder: ({ auth }) => auth.errmsg
       },
       actions: {
         login
       }
     }
-  };
+  }
 </script>
 <style scoped>
     body {

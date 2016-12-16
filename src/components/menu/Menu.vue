@@ -9,30 +9,30 @@
   </div>
 </template>
 <script>
-  import menus from './menu.conf';
-  import $ from 'jquery';
+  import menus from './menu.conf'
+  import $ from 'jquery'
   export default{
     data() {
       return {
         menus: menus,
         currentIndex: 0
-      };
+      }
     },
     vuex: {
       getters: {
-        currentMenu: ({menu}) => menu.current || 'basicEditor'
+        currentMenu: ({ menu }) => menu.current || 'basicEditor'
       }
     },
     ready() {
       for (var k = 0; k < menus.length; k++) {
         if (menus[k].name === this.currentMenu) {
-          this.currentIndex = k;
-          break;
+          this.currentIndex = k
+          break
         }
       }
-      $('.main-menu .ui.accordion').accordion({exclusive: false});
+      $('.main-menu .ui.accordion').accordion({ exclusive: false })
     }
-  };
+  }
 </script>
 <style scoped>
     .ui.accordion.menu {

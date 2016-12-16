@@ -4,4 +4,4 @@
 export default {
   'page1': '/home/page1',
   'page2': '/home/page2'
-};
+}
