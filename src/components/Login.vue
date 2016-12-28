@@ -1,84 +1,81 @@
 <template>
-  <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm card-box loginform">
-    <h3 class="title">系统登录</h3>
-    <el-form-item prop="account">
-      <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
-    </el-form-item>
-    <el-form-item prop="checkPass">
-      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
-    </el-form-item>
-    <el-checkbox v-model="checked" checked style="margin:0px 0px 35px 0px;">记住密码</el-checkbox>
-    <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2">登录</el-button>
-      <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
-    </el-form-item>
-  </el-form>
+	<div class="ui middle aligned center aligned grid">
+		<div class="column">
+			<h2 class="ui teal image header">
+				<img src="../assets/img/logo.png" class="image">
+				<div class="content">登录</div>
+			</h2>
+			<validator name="loginValidation" :classes="{invalid:'error'}">
+				<form class="ui large form" novalidate>
+					<div class="ui stacked segment">
+						<div v-validate-class class="account field">
+							<div class="ui left icon input">
+								<i class="user icon"></i>
+								<input type="text" v-model="user.account" initial="off"
+								       v-validate:account="{required:{rule:true,message:'请输入登录名'}}"
+								       :placeholder="namePlaceholder">
+							</div>
+						</div>
+						<div v-validate-class class="password field">
+							<div class="ui left icon input">
+								<i class="lock icon"></i>
+								<input type="password" v-model="user.password" initial="off"
+								       v-validate:password="{required:{rule:true,message:'请输入密码'}}"
+								       :placeholder="pwdPlaceholder">
+							</div>
+						</div>
+						<div class="ui fluid large teal submit button" :class="{disabled:!$loginValidation.valid}"
+						     @click.stop="loginMain">登录
+						</div>
+					</div>
+				</form>
+			</validator>
+		</div>
+	</div>
 </template>
-
 <script>
-  export default {
-    data() {
-      return {
-        ruleForm2: {
-          account: '',
-          checkPass: ''
-        },
-        rules2: {
-          account: [
-            { required: true, message: '请输入账号', trigger: 'blur' }
-            // { validator: validaePass }
-          ],
-          checkPass: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-            // { validator: validaePass2 }
-          ]
-        },
-        checked: true
-      }
-    },
-    methods: {
-      handleReset2() {
-        this.$refs.ruleForm2.resetFields()
+import { login } from '../vuex/actions'
+export default{
+  data() {
+    return {
+      user: {
+        account: '',
+        password: ''
       },
-      handleSubmit2(ev) {
-        var _this = this
-        this.$refs.ruleForm2.validate((valid) => {
-          if (valid) {
-            // _this.$router.push('/table');
-            _this.$router.replace('/table')
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
-      }
+      namePlaceholder: '请输入登录名'
+    }
+  },
+  methods: {
+    loginMain() {
+      this.login(this.user)
+    }
+  },
+  vuex: {
+    getters: {
+      pwdPlaceholder: ({ auth }) => auth.errmsg
+    },
+    actions: {
+      login
     }
   }
+}
+
 </script>
-
 <style scoped>
-  .card-box {
-    padding: 20px;
-    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    background-clip: padding-box;
-    margin-bottom: 20px;
-    background-color: #F9FAFC;
-    margin: 120px auto;
-    width: 400px;
-    border: 2px solid #8492A6;
-  }
+    body {
+        background-color: #DADADA;
+    }
 
-  .title {
-    margin: 0px auto 40px auto;
-    text-align: center;
-    color: #505458;
-  }
+    body > .grid {
+        height: 100%;
+    }
 
-  .loginform {
-    width: 350px;
-    padding: 35px 35px 15px 35px;
-  }
+    .image {
+        margin-top: -100px;
+    }
+
+    .column {
+        max-width: 450px;
+    }
+
 </style>
