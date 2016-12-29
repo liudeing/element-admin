@@ -17,6 +17,10 @@ module.exports = {
       }
     }
   },
+  "env": {
+    "browser": true,
+    "node": true
+  },
   // add your custom rules here
   'rules': {
     // allow debugger during development
